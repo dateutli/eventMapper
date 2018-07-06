@@ -1,0 +1,27 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>My map</title> 
+        <link rel='stylesheet' type='text/css' href='sdk/map.css'/> 
+        <script src='sdk/tomtom.min.js'></script> 
+        <style>
+          #map {
+              height: 800px;
+              width: 1000px;
+          }
+        </style>
+    </head> 
+    <body> 
+        <div id='map'></div> 
+        <script> 
+            var map = tomtom.L.map('map', { 
+                key: '5gyJBu9LXaUFlEPOnjjAKDRAoPqK9Y03', 
+                basePath: 'sdk', 
+                center: [37.7577, -122.4376],
+                zoom: 11
+            });
+
+            // tomtom.L.map('map', {key: '<your-api-key>'});
+        </script> 
+    </body>
+</html>

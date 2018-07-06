@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>EventMapper</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel='stylesheet' type='text/css' href='sdk/map.css' />
+
+  <!-- Custom styles for this template -->
+  <style>
+    html,body {
+      height: 97.6%;
+      width: 100%;
+    }
+
+    #map {
+      height: 100%;
+      width: 100%;
+      left: 0;
+      position: relative;
+      top: 0;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">EventMapper</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Map
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">My Circles</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">My Events</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Exit</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div id='map' class="mt-5"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+
+        
+
+        <!-- The Modal -->
+        <div class="modal" id="myModal">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <!-- Modal body -->
+              <div class="modal-body text-left">
+
+                <input class="form-control" type="text" placeholder="Event Title">
+
+                <label class="font-weight-bold">Starts:</label>
+                <input class="form-control" type="date">
+                <input class="form-control mt-1" type="time">
+
+                <label class="font-weight-bold">Ends:</label>
+                <input class="form-control" type="date">
+                <input class="form-control mt-1" type="time">
+
+                <label class="font-weight-bold">Circles Invited:</label>
+                <select class="form-control" multiple>
+                  <option>Public</option>
+                  <option>Family</option>
+                  <option>Friends</option>
+                  <option>Classmates</option>
+                </select>
+
+                <label class="font-weight-bold">Event Type:</label>
+                <select class="form-control">
+                  <option>Party</option>
+                  <option>Wedding</option>
+                  <option>Happy Hour</option>
+                </select>
+
+              </div>
+
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Create</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+              </div>
+
+            </div>
+          </div>
+          <!-- Modal End -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src='sdk/tomtom.min.js'></script>
+
+  <script> 
+    function createEvent(){
+    }
+
+    function markerMessage(position, message, map) {
+      tomtom.L.popup().setLatLng(position).setContent(message).openOn(map);
+    }
+
+    var map = tomtom.L.map('map', {
+      key: '5gyJBu9LXaUFlEPOnjjAKDRAoPqK9Y03',
+      basePath: 'sdk',
+      center: [37.7577, -122.4376],
+      zoom: 11
+    });
+
+    map.on('click', function (e) {
+      markerMessage(e.latlng, '<button class="btn btn-success" data-toggle="modal" data-target="#myModal" data-latLng="' + e.latlng.toString() + '" id="createEventMarker">Create Event</button>', map);
+    });
+
+    var marker = tomtom.L.marker([37.768454, -122.492544]).addTo(map);
+    marker.bindPopup('my marker');
+
+    $(document).ready(function () {
+
+      $('#createEvent').click(function(){
+        createEvent();
+      });
+
+      $('#map').on('click', '#createEventMarker', function () {
+        clickedLatLng = this.dataset.latlng;
+      });
+    });
+
+  </script>
+
+</body>
+
+</html>
