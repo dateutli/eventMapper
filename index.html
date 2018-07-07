@@ -16,7 +16,8 @@
 
   <!-- Custom styles for this template -->
   <style>
-    html,body {
+    html,
+    body {
       height: 97.6%;
       width: 100%;
     }
@@ -69,7 +70,7 @@
     <div class="row">
       <div class="col-lg-12 text-center">
 
-        
+
 
         <!-- The Modal -->
         <div class="modal" id="myModal">
@@ -78,15 +79,15 @@
               <!-- Modal body -->
               <div class="modal-body text-left">
 
-                <input class="form-control" type="text" placeholder="Event Title">
+                <input class="form-control" type="text" placeholder="Event Title" id="eventTitle">
 
                 <label class="font-weight-bold">Starts:</label>
-                <input class="form-control" type="date">
-                <input class="form-control mt-1" type="time">
+                <input class="form-control" type="date" id="startDate">
+                <input class="form-control mt-1" type="time" id="startHour">
 
                 <label class="font-weight-bold">Ends:</label>
-                <input class="form-control" type="date">
-                <input class="form-control mt-1" type="time">
+                <input class="form-control" type="date" id="endDate">
+                <input class="form-control mt-1" type="time" id="endHour">
 
                 <label class="font-weight-bold">Circles Invited:</label>
                 <select class="form-control" multiple>
@@ -97,17 +98,22 @@
                 </select>
 
                 <label class="font-weight-bold">Event Type:</label>
-                <select class="form-control">
-                  <option>Party</option>
-                  <option>Wedding</option>
-                  <option>Happy Hour</option>
+                <select class="form-control" id="eventType">
+                  <option value="hack">Hackathon</option>
+                  <option value="game">Game Night</option>
+                  <option value="musi">Music Concert</option>
+                  <option value="part">Party</option>
+                  <option value="tvsp">TV Sports</option>
+                  <option value="lunc">Lunch Special</option>
+                  <option value="happ">Happy Hour</option>
+                  <option value="sale">Sale</option>
                 </select>
 
               </div>
 
               <!-- Modal footer -->
               <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Create</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" id="createEvent">Create</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
               </div>
 
@@ -123,9 +129,25 @@
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src='sdk/tomtom.min.js'></script>
+  <script src='leaflet/leaflet.js'></script>
 
-  <script> 
-    function createEvent(){
+  <script>
+    function placeMarker(latLng, eType) {
+      var marker = tomtom.L.marker(latLng, { icon: icons[eType] }).addTo(map).bindPopup(eTitle);
+      markers.push(marker);
+    }
+    function createEvent() {
+      eTitle = $('#eventTitle').val();
+      $('#eventTitle').val("");
+
+      eType = $('#eventType').val();
+
+      eStarts = $('#startDate').val() + " " + $('#startHour').val()
+      eEnds = $('#endDate').val() + " " + $('#endHour').val()
+
+      placeMarker(eLatLng, eType);
+      map.closePopup();
+
     }
 
     function markerMessage(position, message, map) {
@@ -140,21 +162,61 @@
     });
 
     map.on('click', function (e) {
-      markerMessage(e.latlng, '<button class="btn btn-success" data-toggle="modal" data-target="#myModal" data-latLng="' + e.latlng.toString() + '" id="createEventMarker">Create Event</button>', map);
+      eLatLng = e.latlng;
+      markerMessage(e.latlng, '<button class="btn btn-success" data-toggle="modal" data-target="#myModal" id="createEventMarker">Create Event</button>', map);
     });
 
-    var marker = tomtom.L.marker([37.768454, -122.492544]).addTo(map);
-    marker.bindPopup('my marker');
+    var eLatLng;
+    var markers = [];
+
+    var icons = [];
+    icons['hack'] = L.icon({
+      iconUrl: 'img/hackIcon.svg',
+      iconSize: [38, 60], // size of the icon
+      iconAnchor: [18, 55], // point of the icon which will correspond to marker's location
+    });
+    icons['game'] = L.icon({
+      iconUrl: 'img/gameIcon.svg',
+      iconSize: [38, 60], // size of the icon
+      iconAnchor: [18, 55], // point of the icon which will correspond to marker's location
+    });
+    icons['musi'] = L.icon({
+      iconUrl: 'img/musiIcon.svg',
+      iconSize: [38, 60], // size of the icon
+      iconAnchor: [18, 55], // point of the icon which will correspond to marker's location
+    });
+    icons['part'] = L.icon({
+      iconUrl: 'img/partIcon.svg',
+      iconSize: [38, 60], // size of the icon
+      iconAnchor: [18, 55], // point of the icon which will correspond to marker's location
+    });
+    icons['tvsp'] = L.icon({
+      iconUrl: 'img/tvspIcon.svg',
+      iconSize: [38, 60], // size of the icon
+      iconAnchor: [18, 55], // point of the icon which will correspond to marker's location
+    });
+    icons['lunc'] = L.icon({
+      iconUrl: 'img/luncIcon.svg',
+      iconSize: [38, 60], // size of the icon
+      iconAnchor: [18, 55], // point of the icon which will correspond to marker's location
+    });
+    icons['happ'] = L.icon({
+      iconUrl: 'img/happIcon.svg',
+      iconSize: [38, 60], // size of the icon
+      iconAnchor: [18, 55], // point of the icon which will correspond to marker's location
+    });
+    icons['sale'] = L.icon({
+      iconUrl: 'img/saleIcon.svg',
+      iconSize: [38, 60], // size of the icon
+      iconAnchor: [18, 55], // point of the icon which will correspond to marker's location
+    });
 
     $(document).ready(function () {
 
-      $('#createEvent').click(function(){
+      $('#createEvent').click(function () {
         createEvent();
       });
 
-      $('#map').on('click', '#createEventMarker', function () {
-        clickedLatLng = this.dataset.latlng;
-      });
     });
 
   </script>
