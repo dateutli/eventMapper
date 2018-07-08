@@ -64,6 +64,52 @@
     </div>
   </nav>
 
+  <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
+    <!-- <a class="navbar-brand" href="#">Filters:</a> -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
+      aria-expanded="false" aria-label="Toggle navigation">
+      Filters:
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        <!-- <li class="nav-item active">
+          <a class="nav-link" href="#">Home
+            <span class="sr-only">(current)</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li>
+        <li class="nav-item dropup">
+          <a class="nav-link dropdown-toggle" href="https://getbootstrap.com" id="dropdown10" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">Dropup</a>
+          <div class="dropdown-menu" aria-labelledby="dropdown10">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </li> -->
+        <li>
+          <select class="form-control" id="showEvents">
+            <option value="hack">Show All Events</option>
+            <option value="hack">Hackathon</option>
+            <option value="game">Game Night</option>
+            <option value="musi">Music Concert</option>
+            <option value="part">Party</option>
+            <option value="tvsp">TV Sports</option>
+            <option value="lunc">Lunch Special</option>
+            <option value="happ">Happy Hour</option>
+            <option value="sale">Sale</option>
+          </select>
+        </li>
+
+      </ul>
+    </div>
+  </nav>
+
   <!-- Page Content -->
   <div id='map' class="mt-5"></div>
   <div class="container">
@@ -79,7 +125,11 @@
               <!-- Modal body -->
               <div class="modal-body text-left">
 
+                <label class="font-weight-bold">Title:</label>
                 <input class="form-control" type="text" placeholder="Event Title" id="eventTitle">
+
+                <label class="font-weight-bold">Address:</label>
+                <input class="form-control" type="text" id="eventAddress">
 
                 <label class="font-weight-bold">Starts:</label>
                 <input class="form-control" type="date" id="startDate">
@@ -90,7 +140,7 @@
                 <input class="form-control mt-1" type="time" id="endHour">
 
                 <label class="font-weight-bold">Circles Invited:</label>
-                <select class="form-control" multiple>
+                <select class="form-control" multiple id="eventCircles">
                   <option>Public</option>
                   <option>Family</option>
                   <option>Friends</option>
@@ -132,26 +182,43 @@
   <script src='leaflet/leaflet.js'></script>
 
   <script>
+
+    function getAddress(latLng) {
+      tomtom.reverseGeocode().position(latLng).go(function (geoResponse) {
+        eAddress = geoResponse.address.freeformAddress;
+        $('#eventAddress').val(eAddress);
+      });
+    }
+
     function placeMarker(latLng, eType) {
-      var marker = tomtom.L.marker(latLng, { icon: icons[eType] }).addTo(map).bindPopup(eTitle);
+      var marker = tomtom.L.marker(latLng, { icon: icons[eType], type: eType }).addTo(map).bindPopup(eTitle);
       markers.push(marker);
     }
+
     function createEvent() {
       eTitle = $('#eventTitle').val();
-      $('#eventTitle').val("");
-
+      eStarts = $('#startDate').val() + " " + $('#startHour').val();
+      eEnds = $('#endDate').val() + " " + $('#endHour').val();
+      eCircles = $('#eventCircles').val();
       eType = $('#eventType').val();
 
-      eStarts = $('#startDate').val() + " " + $('#startHour').val()
-      eEnds = $('#endDate').val() + " " + $('#endHour').val()
+      $('#eventTitle').val("");
+      $('#startDate').val("");
+      $('#startHour').val("");
+      $('#endDate').val("");
+      $('#endHour').val("");
+      $('#eventCircles').val("");
 
       placeMarker(eLatLng, eType);
       map.closePopup();
-
     }
 
-    function markerMessage(position, message, map) {
+    function markerMessage(position, message) {
       tomtom.L.popup().setLatLng(position).setContent(message).openOn(map);
+    }
+
+    function removeMarker(index) {
+      map.removeLayer(markers[index])
     }
 
     var map = tomtom.L.map('map', {
@@ -163,10 +230,12 @@
 
     map.on('click', function (e) {
       eLatLng = e.latlng;
-      markerMessage(e.latlng, '<button class="btn btn-success" data-toggle="modal" data-target="#myModal" id="createEventMarker">Create Event</button>', map);
+      getAddress(eLatLng);
+      markerMessage(eLatLng, '<button class="btn btn-success" data-toggle="modal" data-target="#myModal" id="createEventMarker">Create Event</button>');
     });
 
     var eLatLng;
+    var eAddress = "";
     var markers = [];
 
     var icons = [];
