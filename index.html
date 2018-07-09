@@ -66,47 +66,38 @@
 
   <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
     <!-- <a class="navbar-brand" href="#">Filters:</a> -->
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
+    <button class="navbar-toggler mb-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
       aria-expanded="false" aria-label="Toggle navigation">
       Filters:
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
-      <ul class="navbar-nav mr-auto">
-        <!-- <li class="nav-item active">
-          <a class="nav-link" href="#">Home
-            <span class="sr-only">(current)</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Disabled</a>
-        </li>
-        <li class="nav-item dropup">
-          <a class="nav-link dropdown-toggle" href="https://getbootstrap.com" id="dropdown10" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">Dropup</a>
-          <div class="dropdown-menu" aria-labelledby="dropdown10">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>
-        </li> -->
-        <li>
-          <select class="form-control" id="showEvents">
-            <option value="hack">Show All Events</option>
-            <option value="hack">Hackathon</option>
-            <option value="game">Game Night</option>
-            <option value="musi">Music Concert</option>
-            <option value="part">Party</option>
-            <option value="tvsp">TV Sports</option>
-            <option value="lunc">Lunch Special</option>
-            <option value="happ">Happy Hour</option>
-            <option value="sale">Sale</option>
-          </select>
-        </li>
 
-      </ul>
+      <div class="col-lg-1">
+        <input class="form-control text-center" type="text" value="" id="sliderValue" readonly>
+      </div>
+
+      <div class="col-lg-2 mt-3 mb-1">
+        <input type="range" min="0" max="23" value="12" class="slider" id="hourSlider" style="width: 100%;">
+      </div>
+
+      <div class="col-lg-1">
+        <button class="btn btn-info btn-block" id="resetSlider">Reset</button>
+      </div>
+
+      <div class="col-lg-2">
+        <select class="form-control mt-3" id="showEvents">
+          <option value="hack">Show All Events</option>
+          <option value="hack">Hackathon</option>
+          <option value="game">Game Night</option>
+          <option value="musi">Music Concert</option>
+          <option value="part">Party</option>
+          <option value="tvsp">TV Sports</option>
+          <option value="lunc">Lunch Special</option>
+          <option value="happ">Happy Hour</option>
+          <option value="sale">Sale</option>
+        </select>
+      </div>
+
     </div>
   </nav>
 
@@ -130,6 +121,10 @@
 
                 <label class="font-weight-bold">Address:</label>
                 <input class="form-control" type="text" id="eventAddress">
+
+                <!-- <label class="font-weight-bold">Link:</label>
+                <input class="form-control" type="text" placeholder="Text...">
+                <input class="form-control" type="text" placeholder="Link: https://..."> -->
 
                 <label class="font-weight-bold">Starts:</label>
                 <input class="form-control" type="date" id="startDate">
@@ -182,6 +177,18 @@
   <script src='leaflet/leaflet.js'></script>
 
   <script>
+    function updateSliderValue(currHour){
+      if(currHour >= 12){
+        $('#sliderValue').val(currHour + ":00 PM");
+      }else{
+        $('#sliderValue').val(currHour + ":00 AM");
+      }
+    }
+
+    function getCurrentHour() {
+      var d = new Date();
+      return d.getHours();
+    }
 
     function getAddress(latLng) {
       tomtom.reverseGeocode().position(latLng).go(function (geoResponse) {
@@ -282,8 +289,22 @@
 
     $(document).ready(function () {
 
+      updateSliderValue(getCurrentHour());
+      $('#hourSlider').val(getCurrentHour());
+
       $('#createEvent').click(function () {
         createEvent();
+      });
+
+
+      $('#hourSlider').on('input', function () {
+        updateSliderValue($('#hourSlider').val());
+      });
+
+      $('#resetSlider').click(function () {
+        
+        updateSliderValue(getCurrentHour());
+        $('#hourSlider').val(getCurrentHour());
       });
 
     });
