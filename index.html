@@ -136,10 +136,10 @@
 
                 <label class="font-weight-bold">Circles Invited:</label>
                 <select class="form-control" multiple id="eventCircles">
-                  <option>Public</option>
-                  <option>Family</option>
-                  <option>Friends</option>
-                  <option>Classmates</option>
+                  <option value="0">Public</option>
+                  <option value="1">Family</option>
+                  <option value="2">Friends</option>
+                  <option value="3">Classmates</option>
                 </select>
 
                 <label class="font-weight-bold">Event Type:</label>
@@ -177,10 +177,10 @@
   <script src='leaflet/leaflet.js'></script>
 
   <script>
-    function updateSliderValue(currHour){
-      if(currHour >= 12){
+    function updateSliderValue(currHour) {
+      if (currHour >= 12) {
         $('#sliderValue').val(currHour + ":00 PM");
-      }else{
+      } else {
         $('#sliderValue').val(currHour + ":00 AM");
       }
     }
@@ -208,6 +208,12 @@
       eEnds = $('#endDate').val() + " " + $('#endHour').val();
       eCircles = $('#eventCircles').val();
       eType = $('#eventType').val();
+
+      data = { host: '1', title: eTitle, address: eAddress, starts: eStarts, ends: eEnds, circles: JSON.stringify(eCircles), type: eType, latLng: eLatLng.toString() };
+
+      event = $.post('lumen/public/api/events', data, function (event) {
+        console.log('Event ' + event.title + ' has been successfully added!');
+      });
 
       $('#eventTitle').val("");
       $('#startDate').val("");
@@ -302,7 +308,7 @@
       });
 
       $('#resetSlider').click(function () {
-        
+
         updateSliderValue(getCurrentHour());
         $('#hourSlider').val(getCurrentHour());
       });
