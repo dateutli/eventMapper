@@ -51,25 +51,26 @@
 
 
     $('#compassHeading').html("Direction: " + compassHeading + "<br>");
-    
+
     x2 = 0;
     y2 = 0;
 
-    navigator.geolocation.getCurrentPosition(function(location) {
+    navigator.geolocation.getCurrentPosition(function (location) {
       x2 = location.coords.longitude;
       y2 = location.coords.latitude;
+
+      y = y2 - destination['y'];
+      x = x2 - destination['x'];
+
+      destinationBearing = calcAngleDegrees(x, y);
+
+      if (destinationBearing < 0) {
+        destinationBearing = 360 - destinationBearing;
+      }
+
+      $('#destinationBearing').html("Destination: " + destinationBearing);
+
     });
-
-    y = destination['y'] - y2;
-    x = destination['x'] - x2;
-
-    destinationBearing = calcAngleDegrees(x, y);
-    
-    if(destinationBearing < 0){
-      destinationBearing = 360 - destinationBearing;
-    }
-
-    $('#destinationBearing').html("Destination: " + destinationBearing);
 
   }
 
@@ -95,8 +96,8 @@
     destination['y'] = 31.721604; // LAT
 
     window.addEventListener('deviceorientation', compassHeading);
-    
-    
+
+
   });
 
 </script>
