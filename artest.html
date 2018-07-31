@@ -10,10 +10,27 @@
 
 <script src="vendor/jquery/jquery.min.js"></script>
 <script>
+  function opr360(type, destination, offset){
+    if(type == '+'){
+      destination += offset;
+    }else{
+      destination -= offset;
+    }
+
+    if(destination > 360){
+      return destination - 360;
+    }
+    
+    if(destination < 0){
+      return 360 - destination;
+    }
+    return 0;
+  }
+
   function getArrowDirection(direction, destination){
     direction = Math.round(direction);
     destination = Math.round(destination);
-    if(direction == destination){
+    if(direction == destination || (direction < opr360('+', destination, 10) && direction > destination) || (direction > opr360('-', destination, 10) && direction < destination)){
       // return "straight";
       return "|^^^|";
     }else{
