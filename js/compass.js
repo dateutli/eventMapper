@@ -126,12 +126,6 @@ function opr360(type, destination, offset) {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(showPosition);
     } else {
-      x.innerHTML = "Geolocation is not supported by this browser.";
+      alert("Geolocation is not supported by this browser.");
     }
-  }
-  function showPosition(position) {
-    // x = position.coords.longitude;
-    // y = position.coords.latitude;
-    x.innerHTML = "Latitude: " + position.coords.latitude +
-      "<br>Longitude: " + position.coords.longitude;
   }

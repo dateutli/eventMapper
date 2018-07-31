@@ -159,10 +159,12 @@
 
   $(document).ready(function () {
 
+
+
     finish = [];
     finish['x'] = -106.443474; // LNG
     finish['y'] = 31.721604; // LAT
-
+    getLocation();
     window.addEventListener('deviceorientation', compassHeading);
 
 
