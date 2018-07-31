@@ -2,6 +2,7 @@
 
 <body>
   Compass
+  <div id="myCoords"></div>
   <div id="compassHeading"></div>
   <div id="destinationBearing"></div>
 </body>
@@ -59,6 +60,8 @@
     navigator.geolocation.getCurrentPosition(function (location) {
       start['x'] = location.coords.longitude;
       start['y'] = location.coords.latitude;
+
+      $('#myCoords').html("LNG: " + start['x'] + " LAT: " + start['y']);
 
       x = start['x'] - finish['x'];
       y = start['y'] - finish['y'];
