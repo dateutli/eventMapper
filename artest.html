@@ -52,7 +52,9 @@
 
     $('#compassHeading').html("Direction: " + compassHeading);
     
-    
+    x2 = 0;
+    y2 = 0;
+
     navigator.geolocation.getCurrentPosition(function(location) {
       x2 = location.coords.longitude;
       y2 = location.coords.latitude;
