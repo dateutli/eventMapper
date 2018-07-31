@@ -93,7 +93,7 @@ function start() {
       track.stop();
     });
   }
-  const audioSource = null;
+  const audioSource = audioInputSelect.value;
   const videoSource = videoSelect.value;
   const constraints = {
     audio: {deviceId: audioSource ? {exact: audioSource} : undefined},
