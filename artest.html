@@ -6,11 +6,15 @@
 
 <script src="vendor/jquery/jquery.min.js"></script>
 <script>
+  function calcAngleDegrees(x, y) {
+    return Math.atan2(y, x) * 180 / Math.PI;
+  }
+
   function compassHeading(event) {
     var alpha = event.alpha;
     var beta = event.beta;
     var gamma = event.gamma;
-    
+
 
     // Convert degrees to radians
     var alphaRad = alpha * (Math.PI / 180);
@@ -48,13 +52,31 @@
     // return compassHeading;
 
   }
+
+  var x = document.getElementById("demo");
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+  }
+  function showPosition(position) {
+    x.innerHTML = "Latitude: " + position.coords.latitude +
+      "<br>Longitude: " + position.coords.longitude;
+  }
+
+
   destination = [];
   destination['lng'] = -106.443474;
   destination['lat'] = 31.721604;
 
   $(document).ready(function () {
 
-    window.addEventListener('deviceorientation', compassHeading);
+    $(document).on('deviceorientation', function(){
+      compassHeading();
+    })
+    // window.addEventListener('deviceorientation', compassHeading);
 
   });
 
