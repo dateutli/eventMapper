@@ -9,6 +9,15 @@
 
 <script src="vendor/jquery/jquery.min.js"></script>
 <script>
+
+  function getArrowDirection(compassHeading, destinationBearing){
+    diff = Math.abs(destinationBearing - compassHeading);
+    if(diff > (destinationBearing - 30) && diff < (destinationBearing + 30)){
+      response = "|^^^|";
+    }
+
+  }
+
   function calcAngleDegrees(x, y) {
     return Math.atan2(y, x) * 180 / Math.PI;
   }
@@ -69,8 +78,10 @@
       destinationBearing = calcAngleDegrees(x, y);
 
       if (destinationBearing < 0) {
-        destinationBearing = 360 - destinationBearing;
+        destinationBearing = 360 + destinationBearing;
       }
+
+      getArrowDirection();
 
       $('#destinationBearing').html("Destination: " + destinationBearing);
 
