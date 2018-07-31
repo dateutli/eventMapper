@@ -1,5 +1,9 @@
 <html>
 
+<head>
+  <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+</head>
+
 <body>
   Compass
   <div id="myCoords"></div>
@@ -10,50 +14,50 @@
 
 <script src="vendor/jquery/jquery.min.js"></script>
 <script>
-  function opr360(type, destination, offset){
-    if(type == '+'){
+  function opr360(type, destination, offset) {
+    if (type == '+') {
       destination += offset;
-    }else{
+    } else {
       destination -= offset;
     }
 
-    if(destination > 360){
+    if (destination > 360) {
       return destination - 360;
-    }else if(destination < 0){
+    } else if (destination < 0) {
       return 360 - destination;
-    }else{
+    } else {
       return destination;
     }
   }
 
-  function getArrowDirection(direction, destination){
+  function getArrowDirection(direction, destination) {
     direction = Math.round(direction);
     destination = Math.round(destination);
-    if(direction == destination || (direction < opr360('+', destination, 10) && direction > destination) || (direction > opr360('-', destination, 10) && direction < destination)){
-      // return "straight";
-      return "|^^^|";
-    }else{
+    if (direction == destination || (direction < opr360('+', destination, 10) && direction > destination) || (direction > opr360('-', destination, 10) && direction < destination)) {
+      return "up";
+      // return "|^^^|";
+    } else {
 
-      if(destination > direction){
+      if (destination > direction) {
 
         diff = Math.abs(destination - direction);
-        if(diff >= 180){
-          // return "left";
-          return "|<<<|";
-        }else{
-          // return "right";
-          return "|>>>|";
+        if (diff >= 180) {
+          return "left";
+          // return "|<<<|";
+        } else {
+          return "right";
+          // return "|>>>|";
         }
 
-      }else{
+      } else {
 
         diff = Math.abs(destination - direction);
-        if(diff <= 180){
-          // return "left";
-          return "|<<<|";
-        }else{
-          // return "right";
-          return "|>>>|";
+        if (diff <= 180) {
+          return "left";
+          // return "|<<<|";
+        } else {
+          return "right";
+          // return "|>>>|";
         }
 
       }
@@ -105,7 +109,7 @@
 
 
     $('#compassHeading').html("Direction: " + compassHeading + "<br>");
-    
+
     start = [];
     start['x'] = 0;
     start['y'] = 0;
@@ -125,7 +129,7 @@
         destinationBearing = 360 + destinationBearing;
       }
 
-      $('#arrowDirection').html(getArrowDirection(compassHeading, destinationBearing));
+      $('#arrowDirection').html(arrows[getArrowDirection(compassHeading, destinationBearing)]);
 
       $('#destinationBearing').html("Destination: " + destinationBearing);
 
@@ -147,6 +151,11 @@
     x.innerHTML = "Latitude: " + position.coords.latitude +
       "<br>Longitude: " + position.coords.longitude;
   }
+
+  arrows = [];
+  arrows['left'] = '<i class="fa fa-arrow-left fa-5x" aria-hidden="true"></i>';
+  arrows['right'] = '<i class="fa fa-arrow-right fa-5x" aria-hidden="true"></i>';
+  arrows['up'] = '<i class="fa fa-arrow-up fa-5x" aria-hidden="true"></i>';
 
   $(document).ready(function () {
 
