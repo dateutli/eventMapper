@@ -11,8 +11,8 @@
 <script src="vendor/jquery/jquery.min.js"></script>
 <script>
   function getArrowDirection(direction, destination){
-    direction = round(direction);
-    destination = round(destination);
+    direction = Math.round(direction);
+    destination = Math.round(destination);
     if(direction == destination){
       // return "straight";
       return "|^^^|";
