@@ -113,7 +113,7 @@ function opr360(type, destination, offset) {
         destinationBearing = 360 + destinationBearing;
       }
 
-      $('#arrowDirection').html(getArrowDirection(compassHeading, destinationBearing));
+      $('#arrowDirection').html(arrows[getArrowDirection(compassHeading, destinationBearing)]);
 
       $('#destinationBearing').html("Destination: " + destinationBearing);
 
