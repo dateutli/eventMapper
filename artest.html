@@ -51,16 +51,17 @@
 
 
     $('#compassHeading').html("Direction: " + compassHeading + "<br>");
-
-    x2 = 0;
-    y2 = 0;
+    
+    start = [];
+    start['x'] = 0;
+    start['y'] = 0;
 
     navigator.geolocation.getCurrentPosition(function (location) {
-      x2 = location.coords.longitude;
-      y2 = location.coords.latitude;
+      start['x'] = location.coords.longitude;
+      start['y'] = location.coords.latitude;
 
-      y = y2 - destination['y'];
-      x = x2 - destination['x'];
+      x = start['x'] - finish['x'];
+      y = start['y'] - finish['y'];
 
       destinationBearing = calcAngleDegrees(x, y);
 
@@ -91,9 +92,9 @@
 
   $(document).ready(function () {
 
-    destination = [];
-    destination['x'] = -106.443474; // LNG
-    destination['y'] = 31.721604; // LAT
+    finish = [];
+    finish['x'] = -106.443474; // LNG
+    finish['y'] = 31.721604; // LAT
 
     window.addEventListener('deviceorientation', compassHeading);
 
