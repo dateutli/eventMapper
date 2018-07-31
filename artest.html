@@ -19,12 +19,11 @@
 
     if(destination > 360){
       return destination - 360;
-    }
-    
-    if(destination < 0){
+    }else if(destination < 0){
       return 360 - destination;
+    }else{
+      return destination;
     }
-    return 0;
   }
 
   function getArrowDirection(direction, destination){
