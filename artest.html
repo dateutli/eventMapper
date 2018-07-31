@@ -73,10 +73,7 @@
 
   $(document).ready(function () {
 
-    $(document).on('deviceorientation', function(){
-      compassHeading(event);
-    })
-    // window.addEventListener('deviceorientation', compassHeading);
+    window.addEventListener('deviceorientation', compassHeading);
 
   });
 
