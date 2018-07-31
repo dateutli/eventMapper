@@ -49,9 +49,15 @@
 
   }
 
+
+  destination['lng'] = -106.443474;
+  destination['lat'] = 31.721604;
+
   $(document).ready(function () {
 
-    window.addEventListener('deviceorientation', compassHeading);
+    window.addEventListener('deviceorientation', function(){
+      compassHeading();
+    });
 
   });
 
