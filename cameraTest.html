@@ -1,31 +1,76 @@
-<video autoplay></video>
-<img src="">
-<canvas style="display:none;"></canvas>
+<!DOCTYPE html>
+<!--
+ *  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+-->
+<html>
+<head>
 
-<script>
-const captureVideoButton =
-  document.querySelector('#screenshot .capture-button');
-const screenshotButton = document.querySelector('#screenshot-button');
-const img = document.querySelector('#screenshot img');
-const video = document.querySelector('#screenshot video');
+    <meta charset="utf-8">
+    <meta name="description" content="WebRTC code samples">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+    <meta itemprop="description" content="Client-side WebRTC code samples">
+    <meta itemprop="image" content="../../../images/webrtc-icon-192x192.png">
+    <meta itemprop="name" content="WebRTC code samples">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta id="theme-color" name="theme-color" content="#ffffff">
 
-const canvas = document.createElement('canvas');
+    <base target="_blank">
 
-captureVideoButton.onclick = function() {
-  navigator.mediaDevices.getUserMedia(constraints).
-    then(handleSuccess).catch(handleError);
-};
+    <title>Select audio and video sources</title>
 
-screenshotButton.onclick = video.onclick = function() {
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  canvas.getContext('2d').drawImage(video, 0, 0);
-  // Other browsers will fall back to image/png
-  img.src = canvas.toDataURL('image/webp');
-};
 
-function handleSuccess(stream) {
-  screenshotButton.disabled = false;
-  video.srcObject = stream;
-}
-</script>
+    <style>
+        div.select {
+            display: inline-block;
+            margin: 0 0 1em 0;
+        }
+        p.small {
+            font-size: 0.7em;
+        }
+        label {
+            width: 12em;
+            display: inline-block;
+        }
+    </style>
+
+</head>
+
+<body>
+<div id="container">
+
+
+    <p>Get available audio, video sources and audio output devices from <code>mediaDevices.enumerateDevices()</code>
+        then set the source for <code>getUserMedia()</code> using a <code>deviceId</code> constraint.</p>
+
+    <div class="select">
+        <label for="audioSource">Audio input source: </label><select id="audioSource"></select>
+    </div>
+
+    <div class="select">
+        <label for="audioOutput">Audio output destination: </label><select id="audioOutput"></select>
+    </div>
+
+    <div class="select">
+        <label for="videoSource">Video source: </label><select id="videoSource"></select>
+    </div>
+
+    <video id="video" playsinline autoplay></video>
+
+    <p class="small"><b>Note:</b> If you hear a reverb sound your microphone is picking up the output of your
+        speakers/headset, lower the volume and/or move the microphone further away from your speakers/headset.</p>
+
+    <a href="https://github.com/webrtc/samples/tree/gh-pages/src/content/devices/input-output"
+       title="View source for this page on GitHub" id="viewSource">View source on GitHub</a>
+</div>
+
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="js/common.js"></script>
+<script src="js/main.js" async></script>
+
+<!-- <script src="js/lib/ga.js"></script> -->
+</body>
+</html>
