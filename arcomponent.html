@@ -16,8 +16,11 @@
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
 
     <style>
-        .video_overlay{
-            margin-top: -155px; position: absolute; z-index: auto;
+        .video_overlay {
+            margin-top: -300px;
+            margin-left: 300px;
+            position: absolute;
+            z-index: auto;
         }
     </style>
 
@@ -85,18 +88,20 @@
     <script src="js/compass.js" async></script>
 
     <script>
+        arrows = [];
+        arrows['left'] = '<i class="fa fa-arrow-left fa-5x" aria-hidden="true"></i>';
+        arrows['right'] = '<i class="fa fa-arrow-right fa-5x" aria-hidden="true"></i>';
+        arrows['up'] = '<i class="fa fa-arrow-up fa-5x" aria-hidden="true"></i>';
 
         $(document).ready(function () {
-            arrows = [];
-            arrows['left'] = '<i class="fa fa-arrow-left fa-5x" aria-hidden="true"></i>';
-            arrows['right'] = '<i class="fa fa-arrow-right fa-5x" aria-hidden="true"></i>';
-            arrows['up'] = '<i class="fa fa-arrow-up fa-5x" aria-hidden="true"></i>';
 
             finish = [];
             finish['x'] = -106.443474; // LNG
             finish['y'] = 31.721604; // LAT
 
             window.addEventListener('deviceorientation', compassHeading);
+
+
         });
     </script>
 
