@@ -5,15 +5,43 @@
   <div id="myCoords"></div>
   <div id="compassHeading"></div>
   <div id="destinationBearing"></div>
+  <div id="arrowDirection"></div>
 </body>
 
 <script src="vendor/jquery/jquery.min.js"></script>
 <script>
+  function getArrowDirection(direction, destination){
+    direction = round(direction);
+    destination = round(destination);
+    if(direction == destination){
+      // return "straight";
+      return "|^^^|";
+    }else{
 
-  function getArrowDirection(compassHeading, destinationBearing){
-    diff = Math.abs(destinationBearing - compassHeading);
-    if(diff > (destinationBearing - 30) && diff < (destinationBearing + 30)){
-      response = "|^^^|";
+      if(destination > direction){
+
+        diff = Math.abs(destination - direction);
+        if(diff >= 180){
+          // return "left";
+          return "|<<<|";
+        }else{
+          // return "right";
+          return "|>>>|";
+        }
+
+      }else{
+
+        diff = Math.abs(destination - direction);
+        if(diff <= 180){
+          // return "left";
+          return "|<<<|";
+        }else{
+          // return "right";
+          return "|>>>|";
+        }
+
+      }
+
     }
 
   }
@@ -77,11 +105,11 @@
 
       destinationBearing = calcAngleDegrees(x, y);
 
-      if (destinationBearing < 0) {
+      if (destinationBearing <= 0) {
         destinationBearing = 360 + destinationBearing;
       }
 
-      getArrowDirection();
+      $('#arrowDirection').html(getArrowDirection(compassHeading, destinationBearing));
 
       $('#destinationBearing').html("Destination: " + destinationBearing);
 
