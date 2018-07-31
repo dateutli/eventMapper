@@ -1,6 +1,7 @@
 <html>
 
 <body>
+  Compass
   <div id="compassHeading"></div>
   <div id="destinationBearing"></div>
 </body>
@@ -50,7 +51,8 @@
 
 
     $('#compassHeading').html("Direction: " + compassHeading);
-
+    
+    
     navigator.geolocation.getCurrentPosition(function(location) {
       x2 = location.coords.longitude;
       y2 = location.coords.latitude;
