@@ -1,40 +1,31 @@
 <video autoplay></video>
-<p><button class="capture-button">Capture video</button>
-<p><button id="cssfilters-apply">Apply CSS filter</button></p>
+<img src="">
+<canvas style="display:none;"></canvas>
 
 <script>
 const captureVideoButton =
-  document.querySelector('#cssfilters .capture-button');
-const cssFiltersButton =
-  document.querySelector('#cssfilters-apply');
-const video =
-  document.querySelector('#cssfilters video');
+  document.querySelector('#screenshot .capture-button');
+const screenshotButton = document.querySelector('#screenshot-button');
+const img = document.querySelector('#screenshot img');
+const video = document.querySelector('#screenshot video');
 
-let filterIndex = 0;
-const filters = [
-  'grayscale',
-  'sepia',
-  'blur',
-  'brightness',
-  'contrast',
-  'hue-rotate',
-  'hue-rotate2',
-  'hue-rotate3',
-  'saturate',
-  'invert',
-  ''
-];
+const canvas = document.createElement('canvas');
 
 captureVideoButton.onclick = function() {
   navigator.mediaDevices.getUserMedia(constraints).
     then(handleSuccess).catch(handleError);
 };
 
-cssFiltersButton.onclick = video.onclick = function() {
-  video.className = filters[filterIndex++ % filters.length];
+screenshotButton.onclick = video.onclick = function() {
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  // Other browsers will fall back to image/png
+  img.src = canvas.toDataURL('image/webp');
 };
 
 function handleSuccess(stream) {
+  screenshotButton.disabled = false;
   video.srcObject = stream;
 }
 </script>
