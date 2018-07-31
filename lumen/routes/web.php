@@ -17,4 +17,8 @@ $router->get('/', function () use ($router) {
 
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('events', ['uses' => 'EventController@create']);
+
+    $router->get('events/{time}',  ['uses' => 'EventController@getAllEvents']);
+
+    $router->get('userEvents/{id}',  ['uses' => 'EventController@getUserEvents']);
   });

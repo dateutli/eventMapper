@@ -14,4 +14,17 @@ class EventController extends Controller
 
         return response()->json($event, 201);
     }
+
+    public function getAllEvents($time)
+    {   
+        $startTime = ($time - 1) . ':30';
+        $endTime = $time . ':30';
+        return response()->json(Event::where('starts', '>', date("Y-m-d") . ' ' . $startTime)->where('starts', '<', date("Y-m-d") . ' ' . $endTime)->get());
+    }
+
+    public function getUserEvents($id)
+    {   
+        $events = Event::where('host', '=', $id)->get();
+        return response()->json($events);                
+    }
 }
