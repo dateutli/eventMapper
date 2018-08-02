@@ -60,12 +60,12 @@
               <span class="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" href="myprofile.html">My Profile</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Exit</a>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>
@@ -141,9 +141,9 @@
                 <input class="form-control" type="date" id="endDate">
                 <input class="form-control mt-1" type="time" id="endHour">
 
-                <label class="font-weight-bold">Circles Invited:</label>
-                <select class="form-control" multiple id="eventCircles">
-                  <option value="0">Public</option>
+                <!-- <label class="font-weight-bold">Circles Invited:</label> -->
+                <select class="form-control" multiple id="eventCircles" hidden>
+                  <option value="0" selected>Public</option>
                   <option value="1">Family</option>
                   <option value="2">Friends</option>
                   <option value="3">Classmates</option>
@@ -212,10 +212,10 @@
                   <u>A</u>ssisted
                   <u>R</u>oaming
                 </button>
-                <button type="button" class="btn btn-warning btn-block">
+                <!-- <button type="button" class="btn btn-warning btn-block">
                   <i class="fa fa-car" aria-hidden="true"></i>
                   Request Ride
-                </button>
+                </button> -->
 
 
               </div>
@@ -429,9 +429,9 @@
     var startIcon = tomtom.L.icon({ iconUrl: 'sdk/images/start-black.png', iconSize: [30, 30], iconAnchor: [15, 15] });
     var route;
     arrows = [];
-    arrows['left'] = '<i class="fa fa-arrow-left fa-5x" aria-hidden="true"></i>';
-    arrows['right'] = '<i class="fa fa-arrow-right fa-5x" aria-hidden="true"></i>';
-    arrows['up'] = '<i class="fa fa-arrow-up fa-5x" aria-hidden="true"></i>';
+    arrows['left'] = '<i class="fa fa-arrow-left fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i>';
+    arrows['right'] = '<i class="fa fa-arrow-right fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i>';
+    arrows['up'] = '<i class="fa fa-map-marker fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i>';
 
     $(document).ready(function () {
       finish = [];
