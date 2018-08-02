@@ -182,18 +182,32 @@
             <div class="modal-content">
               <!-- Modal body -->
               <div class="modal-body text-center">
-                <h2>Event Title</h2>
+                <h2 id="clickedEventTitle">Event Title</h2>
                 <hr>
+                <div class="text-left">
+                  <strong>Starts at:</strong>
+                  <span id="clickedEventStartsAt"></span>
+                  <br>
+                  <strong>Ends at:</strong>
+                  <span id="clickedEventEndsAt"></span>
+                  <br>
+                  <strong>Address:</strong>
+                  <span id="clickedEventAddress"></span>
+                  <br>
+                  <strong>Type:</strong>
+                  <span id="clickedEventType"></span>
+                </div>
 
                 <div id="ar">
-                    <video class="embed-responsive mt-2" id="video" playsinline autoplay></video>
-                    <div class="select mt-1">
-                      <select class="form-control" id="videoSource"></select>
-                    </div>
-    
-                    <div class="video_overlay" id="arrowDirection"></div>
-    
-                    <!-- Compass
+                  <hr>
+                  <video class="embed-responsive mt-2" id="video" playsinline autoplay></video>
+                  <div class="select mt-1">
+                    <select class="form-control" id="videoSource"></select>
+                  </div>
+
+                  <div class="video_overlay" id="arrowDirection"></div>
+
+                  <!-- Compass
                     <div id="myCoords"></div>
                     <div id="compassHeading"></div>
                     <div id="destinationBearing"></div>
@@ -247,17 +261,19 @@
   <script src="js/compass.js" async></script>
 
   <script>
-    function hideAR(){
+    function hideAR() {
       $('#ar').hide();
     }
 
-    function showAR(){
+    function showAR() {
       $('#ar').show();
     }
 
     // Getting Directions functions
     function clearDirections() {
-      map.removeLayer(route);
+      if (route != null) {
+        map.removeLayer(route);
+      }
     }
 
     function getDirections(start, end) {
@@ -293,7 +309,7 @@
         for (i = 0; i < response.length; i++) {
           latLng = (response[i]['latLng']).split(',');
           latLng = L.latLng(latLng[0], latLng[1]);
-          placeMarker(latLng, response[i]['type'], response[i]['title'], response[i]['id']);
+          placeMarker(latLng, response[i]['type'], response[i]['title'], response[i]['id'], response[i]['starts'], response[i]['ends'], response[i]['address'], response[i]['type']);
         }
       });
     }
@@ -318,8 +334,8 @@
       });
     }
 
-    function placeMarker(latLng, type, title, id) {
-      var marker = tomtom.L.marker(latLng, { icon: icons[type], type: type, id: id }).addTo(map).bindPopup(title);
+    function placeMarker(latLng, type, title, id, starts, ends, address, type) {
+      var marker = tomtom.L.marker(latLng, { icon: icons[type], type: type, id: id, title: title, starts: starts, ends: ends, address: address, type: type }).addTo(map).bindPopup(title);
       marker.on('click', function (e) {
         markerClicked = e;
       });
@@ -429,11 +445,11 @@
     var startIcon = tomtom.L.icon({ iconUrl: 'sdk/images/start-black.png', iconSize: [30, 30], iconAnchor: [15, 15] });
     var route;
     var distanceAway = 1;
-    
+
     arrows = [];
     arrows['left'] = '<i class="fa fa-arrow-left fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i>';
     arrows['right'] = '<i class="fa fa-arrow-right fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i>';
-    arrows['up'] = '<i class="fa fa-map-marker fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i><div id="distanceAway">'+ distanceAway +'</div>';
+    arrows['up'] = '<i class="fa fa-map-marker fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i><div id="distanceAway">' + distanceAway + '</div>';
 
     $(document).ready(function () {
       finish = [];
@@ -442,7 +458,7 @@
 
       window.addEventListener('deviceorientation', compassHeading);
 
-      $('#getAR').click(function(){
+      $('#getAR').click(function () {
         finish['x'] = markerClicked.latlng.lng;
         finish['y'] = markerClicked.latlng.lat;
         showAR();
@@ -460,6 +476,14 @@
 
       $('.leaflet-marker-pane').click(function () {
         $('#ar').hide();
+        // $('#clickedEventTitle').hmtl();
+        setTimeout(function () {
+          $('#clickedEventTitle').html(markerClicked.target.options.title);
+          $('#clickedEventStartsAt').html(markerClicked.target.options.starts);
+          $('#clickedEventEndsAt').html(markerClicked.target.options.ends);
+          $('#clickedEventAddress').html(markerClicked.target.options.address);
+          $('#clickedEventType').html(markerClicked.target.options.type);
+        }, 10);
         $('#eInfoModal').modal('show');
       });
 
