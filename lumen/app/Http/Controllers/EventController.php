@@ -15,11 +15,15 @@ class EventController extends Controller
         return response()->json($event, 201);
     }
 
-    public function getAllEvents($time)
+    public function getAllEvents($time, $type)
     {   
         $startTime = ($time - 1) . ':30';
         $endTime = $time . ':30';
-        return response()->json(Event::where('starts', '>', date("Y-m-d") . ' ' . $startTime)->where('starts', '<', date("Y-m-d") . ' ' . $endTime)->get());
+        if($type == "alle"){
+            return response()->json(Event::where('starts', '>', date("Y-m-d") . ' ' . $startTime)->where('starts', '<', date("Y-m-d") . ' ' . $endTime)->get());
+        }else{
+            return response()->json(Event::where('starts', '>', date("Y-m-d") . ' ' . $startTime)->where('starts', '<', date("Y-m-d") . ' ' . $endTime)->where('type', '=', $type)->get());
+        }
     }
 
     public function getUserEvents($id)

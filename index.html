@@ -14,6 +14,9 @@
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link rel='stylesheet' type='text/css' href='sdk/map.css' />
 
+  <!-- Font awesome -->
+  <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+
   <!-- Custom styles for this template -->
   <style>
     html,
@@ -28,6 +31,13 @@
       left: 0;
       position: relative;
       top: 0;
+    }
+
+    .video_overlay {
+      margin-top: -300px;
+      margin-left: 140px;
+      position: absolute;
+      z-index: auto;
     }
   </style>
 
@@ -83,7 +93,7 @@
 
       <div class="col-lg-2">
         <select class="form-control mt-3" id="showEvents">
-          <option value="hack">Show All Events</option>
+          <option value="alle">Show All Events</option>
           <option value="hack">Hackathon</option>
           <option value="game">Game Night</option>
           <option value="musi">Music Concert</option>
@@ -164,6 +174,60 @@
           <!-- Modal End -->
 
         </div>
+
+
+        <!-- Event Info Modal -->
+        <div class="modal" id="eInfoModal">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <!-- Modal body -->
+              <div class="modal-body text-center">
+                <h2>Event Title</h2>
+                <hr>
+
+                <video class="embed-responsive mt-2" id="video" playsinline autoplay></video>
+                <div class="select mt-1">
+                  <select class="form-control" id="videoSource"></select>
+                </div>
+
+                <div class="video_overlay" id="arrowDirection"></div>
+
+                Compass
+                <div id="myCoords"></div>
+                <div id="compassHeading"></div>
+                <div id="destinationBearing"></div>
+                <div id="arrowDirection"></div>
+
+                <hr>
+
+                <button type="button" class="btn btn-success" id="getDirections">
+                  <i class="fa fa-location-arrow" aria-hidden="true"></i>
+                  Directions
+                </button>
+                <button type="button" class="btn btn-info">
+                  <i class="fa fa-street-view" aria-hidden="true"></i>
+                  <u>A</u>ssisted
+                  <u>R</u>oaming
+                </button>
+                <button type="button" class="btn btn-warning">
+                  <i class="fa fa-car" aria-hidden="true"></i>
+                  Request Ride
+                </button>
+
+
+              </div>
+
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              </div>
+
+            </div>
+          </div>
+          <!-- Modal End -->
+
+        </div>
+
       </div>
     </div>
   </div>
@@ -172,8 +236,57 @@
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src='sdk/tomtom.min.js'></script>
   <script src='leaflet/leaflet.js'></script>
+  <!-- live camera feed -->
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/main.js" async></script>
+  <!-- Position Functions -->
+  <script src="js/compass.js" async></script>
 
   <script>
+    // Getting Directions functions
+    function clearDirections() {
+      map.removeLayer(route);
+    }
+
+    function getDirections(start, end) {
+      tomtom.routingKey('5gyJBu9LXaUFlEPOnjjAKDRAoPqK9Y03');
+      tomtom.routing({
+        traffic: false
+      })
+        .locations(start + ':' + end)
+        .go().then(function (routeJson) {
+          route = tomtom.L.geoJson(routeJson, {
+            onEachFeature: addMarkers,
+            style: { color: '#00d7ff', opacity: 0.8 }
+          }).addTo(map);
+          map.fitBounds(route.getBounds(), { padding: [5, 5] });
+        });
+    }
+
+    function addMarkers(feature) {
+      var startPoint, endPoint;
+      if (feature.geometry.type === 'MultiLineString') {
+        startPoint = feature.geometry.coordinates[0][0].reverse(); //get first point from first line
+        endPoint = feature.geometry.coordinates.slice(-1)[0].slice(-1)[0].reverse(); //get last point from last line
+      } else {
+        startPoint = feature.geometry.coordinates[0].reverse();
+        endPoint = feature.geometry.coordinates.slice(-1)[0].reverse();
+      }
+      tomtom.L.marker(startPoint, { icon: startIcon }).addTo(map);
+      tomtom.L.marker(endPoint, { icon: endIcon }).addTo(map);
+    }
+
+    function getEvents(time, type) {
+      $.get('lumen/public/api/events/' + time + '/' + type, function (response) {
+        for (i = 0; i < response.length; i++) {
+          latLng = (response[i]['latLng']).split(',');
+          latLng = L.latLng(latLng[0], latLng[1]);
+          placeMarker(latLng, response[i]['type'], response[i]['title'], response[i]['id']);
+        }
+      });
+    }
+
     function updateSliderValue(currHour) {
       if (currHour >= 12) {
         $('#sliderValue').val(currHour + ":00 PM");
@@ -194,8 +307,11 @@
       });
     }
 
-    function placeMarker(latLng, eType) {
-      var marker = tomtom.L.marker(latLng, { icon: icons[eType], type: eType }).addTo(map).bindPopup(eTitle);
+    function placeMarker(latLng, type, title, id) {
+      var marker = tomtom.L.marker(latLng, { icon: icons[type], type: type, id: id }).addTo(map).bindPopup(title);
+      marker.on('click', function (e) {
+        markerClicked = e;
+      });
       markers.push(marker);
     }
 
@@ -206,7 +322,7 @@
       eCircles = $('#eventCircles').val();
       eType = $('#eventType').val();
 
-      data = { host: '1', title: eTitle, address: eAddress, starts: eStarts, ends: eEnds, circles: JSON.stringify(eCircles), type: eType, latLng: eLatLng.toString() };
+      data = { host: '1', title: eTitle, address: eAddress, starts: eStarts, ends: eEnds, circles: JSON.stringify(eCircles), type: eType, latLng: eLatLng.lat + ',' + eLatLng.lng };
 
       event = $.post('lumen/public/api/events', data, function (event) {
         console.log('Event ' + event.title + ' has been successfully added!');
@@ -219,12 +335,19 @@
       $('#endHour').val("");
       $('#eventCircles').val("");
 
-      placeMarker(eLatLng, eType);
+      removeMarkers();
+      getEvents($('#hourSlider').val(), $('#showEvents').val());
       map.closePopup();
     }
 
     function markerMessage(position, message) {
       tomtom.L.popup().setLatLng(position).setContent(message).openOn(map);
+    }
+
+    function removeMarkers() {
+      for (i = 0; i < markers.length; i++) {
+        removeMarker(i);
+      }
     }
 
     function removeMarker(index) {
@@ -290,24 +413,64 @@
       iconAnchor: [18, 55], // point of the icon which will correspond to marker's location
     });
 
+    var markerClicked;
+    var endIcon = tomtom.L.icon({ iconUrl: 'sdk/images/end-black.png', iconSize: [30, 30], iconAnchor: [15, 15] });
+    var startIcon = tomtom.L.icon({ iconUrl: 'sdk/images/start-black.png', iconSize: [30, 30], iconAnchor: [15, 15] });
+    var route;
+    arrows = [];
+    arrows['left'] = '<i class="fa fa-arrow-left fa-5x" aria-hidden="true"></i>';
+    arrows['right'] = '<i class="fa fa-arrow-right fa-5x" aria-hidden="true"></i>';
+    arrows['up'] = '<i class="fa fa-arrow-up fa-5x" aria-hidden="true"></i>';
+
     $(document).ready(function () {
+
+      finish = [];
+      finish['x'] = -106.443474; // LNG
+      finish['y'] = 31.721604; // LAT
+
+      window.addEventListener('deviceorientation', compassHeading);
+
+      $('#getDirections').click(function () {
+        navigator.geolocation.getCurrentPosition(function (location) {
+          from = location.coords.latitude + ',' + location.coords.longitude;
+          to = markerClicked.latlng.lat + ',' + markerClicked.latlng.lng;
+          getDirections(from, to);
+        });
+        $('#eInfoModal').modal('hide');
+      });
+
+      $('.leaflet-marker-pane').click(function () {
+        $('#eInfoModal').modal('show');
+      });
+
 
       updateSliderValue(getCurrentHour());
       $('#hourSlider').val(getCurrentHour());
+
+      removeMarkers();
+      getEvents($('#hourSlider').val(), $('#showEvents').val());
 
       $('#createEvent').click(function () {
         createEvent();
       });
 
+      $('#showEvents').change(function () {
+        removeMarkers();
+        getEvents($('#hourSlider').val(), $('#showEvents').val());
+      });
 
       $('#hourSlider').on('input', function () {
         updateSliderValue($('#hourSlider').val());
+        removeMarkers();
+        getEvents($('#hourSlider').val(), $('#showEvents').val());
       });
 
       $('#resetSlider').click(function () {
-
         updateSliderValue(getCurrentHour());
         $('#hourSlider').val(getCurrentHour());
+        removeMarkers();
+        getEvents($('#hourSlider').val(), $('#showEvents').val());
+        clearDirections();
       });
 
     });
