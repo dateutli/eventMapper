@@ -130,7 +130,7 @@ function opr360(type, destination, offset) {
       }
 
       distanceAway = getDistance(start['y'], start['x'], finish['y'], finish['x']) / 1609;
-      arrows['up'] = '<i class="fa fa-map-marker fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i><div id="distanceAway" style="text-shadow: 2px 2px 4px white;">'+ distanceAway +' mi</div>';
+      arrows['up'] = '<i class="fa fa-map-marker fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i><div id="distanceAway">'+ distanceAway +' mi</div>';
       $('#arrowDirection').html(arrows[getArrowDirection(compassHeading, destinationBearing)]);
 
       // $('#destinationBearing').html("Destination: " + destinationBearing);
