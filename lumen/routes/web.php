@@ -21,4 +21,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('events/{time}',  ['uses' => 'EventController@getAllEvents']);
 
     $router->get('userEvents/{id}',  ['uses' => 'EventController@getUserEvents']);
+
+    $router->get('test',  ['uses' => 'EventController@test']);
   });

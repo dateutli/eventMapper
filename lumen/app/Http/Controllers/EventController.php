@@ -27,4 +27,10 @@ class EventController extends Controller
         $events = Event::where('host', '=', $id)->get();
         return response()->json($events);                
     }
+
+    public function test()
+    {   
+        $response['message'] = 'Hello world';
+        return response()->json($response);                
+    }
 }
