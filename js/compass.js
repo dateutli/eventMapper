@@ -1,3 +1,19 @@
+function rad(x) {
+  return x * Math.PI / 180;
+};
+
+function getDistance(lat1, lng1, lat2, lng2) {
+  var R = 6378137; // Earth’s mean radius in meter
+  var dLat = rad(lat2 - lat1);
+  var dLong = rad(lng2 - lng1;
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(rad(lat1)) * Math.cos(rad(lat2)) *
+    Math.sin(dLong / 2) * Math.sin(dLong / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c;
+  return d; // returns the distance in meter
+};
+
 function opr360(type, destination, offset) {
     if (type == '+') {
       destination += offset;
@@ -92,7 +108,7 @@ function opr360(type, destination, offset) {
     compassHeading *= 180 / Math.PI;
 
 
-    $('#compassHeading').html("Direction: " + compassHeading + "<br>");
+    // $('#compassHeading').html("Direction: " + compassHeading + "<br>");
 
     start = [];
     start['x'] = 0;
@@ -102,7 +118,7 @@ function opr360(type, destination, offset) {
       start['x'] = location.coords.longitude;
       start['y'] = location.coords.latitude;
 
-      $('#myCoords').html("LNG: " + start['x'] + " LAT: " + start['y']);
+      // $('#myCoords').html("LNG: " + start['x'] + " LAT: " + start['y']);
 
       x = start['x'] - finish['x'];
       y = start['y'] - finish['y'];
@@ -112,10 +128,12 @@ function opr360(type, destination, offset) {
       if (destinationBearing <= 0) {
         destinationBearing = 360 + destinationBearing;
       }
-
+      
+      distanceAway = getDistance(start['y'], start['x'], finish['y'], finish['x']);
+      arrows['up'] = '<i class="fa fa-map-marker fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i><div id="distanceAway">'+ distanceAway +'</div>';
       $('#arrowDirection').html(arrows[getArrowDirection(compassHeading, destinationBearing)]);
 
-      $('#destinationBearing').html("Destination: " + destinationBearing);
+      // $('#destinationBearing').html("Destination: " + destinationBearing);
 
     });
 

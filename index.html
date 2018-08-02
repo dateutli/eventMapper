@@ -428,10 +428,12 @@
     var endIcon = tomtom.L.icon({ iconUrl: 'sdk/images/end-black.png', iconSize: [30, 30], iconAnchor: [15, 15] });
     var startIcon = tomtom.L.icon({ iconUrl: 'sdk/images/start-black.png', iconSize: [30, 30], iconAnchor: [15, 15] });
     var route;
+    var distanceAway = 0;
+    
     arrows = [];
     arrows['left'] = '<i class="fa fa-arrow-left fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i>';
     arrows['right'] = '<i class="fa fa-arrow-right fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i>';
-    arrows['up'] = '<i class="fa fa-map-marker fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i><div id="distanceAway">300 M</div>';
+    arrows['up'] = '<i class="fa fa-map-marker fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i><div id="distanceAway">'+ distanceAway +'</div>';
 
     $(document).ready(function () {
       finish = [];
