@@ -186,14 +186,14 @@
                 <hr>
 
                 <div id="ar">
-                  <video class="embed-responsive mt-2" id="video" playsinline autoplay></video>
-                  <div class="select mt-1">
-                    <select class="form-control" id="videoSource"></select>
-                  </div>
-
-                  <div class="video_overlay" id="arrowDirection"></div>
-
-                  <!-- Compass
+                    <video class="embed-responsive mt-2" id="video" playsinline autoplay></video>
+                    <div class="select mt-1">
+                      <select class="form-control" id="videoSource"></select>
+                    </div>
+    
+                    <div class="video_overlay" id="arrowDirection"></div>
+    
+                    <!-- Compass
                     <div id="myCoords"></div>
                     <div id="compassHeading"></div>
                     <div id="destinationBearing"></div>
@@ -247,11 +247,11 @@
   <script src="js/compass.js" async></script>
 
   <script>
-    function hideAR() {
+    function hideAR(){
       $('#ar').hide();
     }
 
-    function showAR() {
+    function showAR(){
       $('#ar').show();
     }
 
@@ -431,7 +431,7 @@
     arrows = [];
     arrows['left'] = '<i class="fa fa-arrow-left fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i>';
     arrows['right'] = '<i class="fa fa-arrow-right fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i>';
-    arrows['up'] = '<span class="fa-stack fa-5x"><i class="fa fa-map-marker fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i><span class="fa fa-stack-1x" style="color:red;"><span id="distanceAway" style="font-size:35px;">300 mi</span></span></span>';
+    arrows['up'] = '<i class="fa fa-map-marker fa-5x" aria-hidden="true" style="text-shadow: 2px 2px 4px white;"></i> 300 M away';
 
     $(document).ready(function () {
       finish = [];
@@ -440,7 +440,7 @@
 
       window.addEventListener('deviceorientation', compassHeading);
 
-      $('#getAR').click(function () {
+      $('#getAR').click(function(){
         finish['x'] = markerClicked.latlng.lng;
         finish['y'] = markerClicked.latlng.lat;
         showAR();
